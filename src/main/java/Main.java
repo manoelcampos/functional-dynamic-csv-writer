@@ -11,7 +11,7 @@ public class Main {
             new Product(3, "Product 3", 30.0)
         );
 
-        final var csvWriter = new CsvWriter()
+        final var csvWriter = new CsvWriter<Product>()
                 .addColumn("Name", Product::getName)
                 .addColumn("Price", Product::getPrice);
 

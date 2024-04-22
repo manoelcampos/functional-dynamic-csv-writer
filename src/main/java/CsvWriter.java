@@ -1,3 +1,4 @@
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -20,15 +21,7 @@ public class CsvWriter {
      * to show as the column data.
      * This Function is usually a getter from the Product class.
      */
-    private Map<String, Function<Product, Object>> columnMapper;
-
-    /**
-     * Creates a CSV writer with the columns to be shown in the CSV file.
-     * @param columnMapper see {@link #columnMapper}
-     */
-    public CsvWriter(final Map<String, Function<Product, Object>> columnMapper) {
-        this.columnMapper = columnMapper;
-    }
+    private Map<String, Function<Product, Object>> columnMapper = new LinkedHashMap<>();
 
     /**
      * {@return the header of the CSV file}
@@ -52,5 +45,10 @@ public class CsvWriter {
         }
 
         return csv.toString();
+    }
+
+    public CsvWriter addColumn(String columnName, Function<Product, Object> columnFunction){
+        columnMapper.put(columnName, columnFunction);
+        return this;
     }
 }

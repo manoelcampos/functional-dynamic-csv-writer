@@ -1,6 +1,4 @@
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 /**
  * @author Manoel Campos
@@ -13,29 +11,22 @@ public class Main {
             new Product(3, "Product 3", 30.0)
         );
 
-        /*
-        Defines the columns to be shown in the CSV file.
-        One is dynamically computed.
-        Map.of doesn't ensure the order of the columns (which may not be desirable).
-        */
-        final Map<String, Function<Product, Object>> columnMapper = Map.of(
-            "Name", Product::getName,
-            "Price", Product::getPrice,
+        final var csvWriter = new CsvWriter()
+                .addColumn("Name", Product::getName)
+                .addColumn("Price", Product::getPrice);
 
-            /* Defines a column that is computed based on the product price.
-            * In this case, it creates a lambda expression (anonymous function)
-            * to compute that.*/
-            "Price with discount", product -> product.getPrice() * 0.9,
+        /* Defines a column that is computed based on the product price.
+         * In this case, it creates a lambda expression (anonymous function)
+         * to compute that.*/
+        csvWriter.addColumn("Price with discount", product -> product.getPrice() * 0.9);
 
-            /*Creates a column to indicate the number of orders of a product.
-            * The Function that gets the value for such a column will be generated
-            * randomly, to simulate a computationally complex operation.
-            * It is also created as a new method to simulte a more complex
-            * operation with multiple lines. */
-            "Orders", product -> getOrders(product)
-        );
+        /*Creates a column to indicate the number of orders of a product.
+         * The Function that gets the value for such a column will be generated
+         * randomly, to simulate a computationally complex operation.
+         * It is also created as a new method to simulte a more complex
+         * operation with multiple lines. */
+        csvWriter.addColumn("Orders", product -> getOrders(product));
 
-        final var csvWriter = new CsvWriter(columnMapper);
         System.out.println(csvWriter.write(products));
     }
 
